@@ -1,0 +1,4 @@
+rootProject.name = 'arp'
+include 'common'
+include 'sensor'
+include 'sender'
