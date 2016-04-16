@@ -1,9 +1,10 @@
 package by.psu.arp.launcher;
 
 import by.psu.arp.util.logging.ArpLogger;
-import by.psu.arp.executor.SenderExecutor;
-import by.psu.arp.packet.sender.impl.PacketSenderFactory;
+import by.psu.arp.executor.SensorExecutor;
+import by.psu.arp.packet.sensor.impl.SensorFactory;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.Pcaps;
@@ -13,30 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Sender launcher
+ * Sensor launcher
  * <p>
  * Date: Mar 27, 2016
  * </p>
  */
-public class SenderLauncher implements ILauncher {
+public class SensorLauncher implements ILauncher {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String FIND_ALL_DEVICES_ERROR = "Failed to get list of interfaces.";
-    private static final String CREATE_SENDER_FOR_NIF_ERROR
-            = "Unable to create packet sender for [{}] network interface.";
+    private static final String CREATE_SENSOR_FOR_NIF_ERROR
+            = "Unable to create packet sensor for [{}] network interface.";
     private static final String ATTEMPT_TO_STOP_EXECUTOR = "Attempt to stop executor.";
-    private static final String THREAD_GROUP = "sender-launcher";
+    private static final String THREAD_GROUP = "sensor-launcher";
 
-    private List<SenderExecutor> executors;
+    private List<SensorExecutor> executors;
     private ThreadGroup threadGroup;
 
-    public SenderLauncher() {
+    public SensorLauncher() {
         threadGroup = new ThreadGroup(THREAD_GROUP);
     }
 
     @Override
     public void launch() {
-        List<PcapNetworkInterface> interfaces = null;
+        List<PcapNetworkInterface> interfaces;
         try {
             interfaces = Pcaps.findAllDevs();
         } catch (PcapNativeException e) {
@@ -45,15 +46,15 @@ public class SenderLauncher implements ILauncher {
         }
         executors = new ArrayList<>(interfaces.size());
         for (PcapNetworkInterface networkInterface : interfaces) {
-            SenderExecutor senderExecutor;
+            SensorExecutor sensorExecutor;
             try {
-                senderExecutor = new SenderExecutor(PacketSenderFactory.create(networkInterface), 1000);
-            } catch (PcapNativeException e) {
-                LOGGER.error(CREATE_SENDER_FOR_NIF_ERROR, networkInterface);
+                sensorExecutor = new SensorExecutor(SensorFactory.create(networkInterface));
+            } catch (PcapNativeException | NotOpenException e) {
+                LOGGER.error(CREATE_SENSOR_FOR_NIF_ERROR, networkInterface);
                 continue;
             }
-            new Thread(threadGroup, senderExecutor, THREAD_GROUP + "-" + networkInterface.getName()).start();
-            executors.add(senderExecutor);
+            new Thread(threadGroup, sensorExecutor, THREAD_GROUP + "-" + networkInterface.getName()).start();
+            executors.add(sensorExecutor);
         }
 
     }
@@ -62,7 +63,7 @@ public class SenderLauncher implements ILauncher {
     public void stop() {
         if (executors.size() > NumberUtils.INTEGER_ZERO) {
             LOGGER.info(ATTEMPT_TO_STOP_EXECUTOR);
-            executors.forEach(SenderExecutor::stop);
+            executors.forEach(SensorExecutor::stop);
         }
     }
 }

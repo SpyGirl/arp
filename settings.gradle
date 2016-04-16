@@ -1,4 +1,6 @@
 rootProject.name = 'arp'
 include 'common'
-include 'sensor'
+include 'sniffer'
 include 'sender'
+include 'analyzer'
+include 'storage'

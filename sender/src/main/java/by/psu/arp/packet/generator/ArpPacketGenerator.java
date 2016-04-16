@@ -1,6 +1,6 @@
 package by.psu.arp.packet.generator;
 
-import by.psu.arp.common.util.logging.ArpLogger;
+import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.packet.ArpPacket.Builder;
 import org.pcap4j.packet.EthernetPacket;
 import org.pcap4j.packet.Packet;

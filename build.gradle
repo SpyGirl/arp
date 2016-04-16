@@ -17,3 +17,6 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
 }
 
+task getHomeDir << {
+    println gradle.gradleHomeDir
+}

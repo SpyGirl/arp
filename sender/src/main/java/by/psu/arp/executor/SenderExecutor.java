@@ -1,7 +1,6 @@
 package by.psu.arp.executor;
 
-import by.psu.arp.common.domain.executor.Executor;
-import by.psu.arp.common.util.logging.ArpLogger;
+import by.psu.arp.util.logging.ArpLogger;
 import by.psu.arp.packet.generator.ArpPacketGenerator;
 import by.psu.arp.packet.sender.api.IPacketSender;
 import org.pcap4j.core.NotOpenException;
