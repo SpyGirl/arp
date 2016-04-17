@@ -78,6 +78,26 @@ public final class PacketInfoStorage<T extends PacketInfo<ArpPacket>> implements
     /**
      * Gets set of replay packet info-s.
      *
+     * @param macAddress source mac address
+     * @return packet info set
+     */
+    public ConcurrentSkipListSet<T> getReplays(MacAddress macAddress) {
+        return macReplays.get(macAddress);
+    }
+
+    /**
+     * Gets set of request packet info-s.
+     *
+     * @param macAddress source IP address
+     * @return packet info set
+     */
+    public ConcurrentSkipListSet<T> getRequests(MacAddress macAddress) {
+        return macRequests.get(macAddress);
+    }
+
+    /**
+     * Gets set of replay packet info-s.
+     *
      * @param inetAddress source IP address
      * @return packet info set
      */
