@@ -1,15 +1,15 @@
 package by.psu.arp.analyzer.plain;
 
-import by.psu.arp.model.analysis.AnalysisErrorResultHandler;
-import by.psu.arp.model.analysis.AnalysisResult;
-import by.psu.arp.model.packet.PacketInfo;
+import by.psu.arp.analysis.AnalysisErrorResultHandler;
+import by.psu.arp.analysis.AnalysisResult;
+import by.psu.arp.packet.PacketInfo;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.packet.namednumber.ArpOperation;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import static by.psu.arp.model.analysis.AnalysisResultType.REPLAY_TIMEOUT_EXPIRE;
-import static by.psu.arp.model.analysis.AnalysisResultType.REPLAY_WITHOUT_REQUEST;
+import static by.psu.arp.analysis.AnalysisResultType.REPLAY_TIMEOUT_EXPIRE;
+import static by.psu.arp.analysis.AnalysisResultType.REPLAY_WITHOUT_REQUEST;
 import static by.psu.arp.storage.PacketInfoStorage.getStorageInstance;
 import static by.psu.arp.util.packet.PacketInfoUtils.*;
 
@@ -24,7 +24,8 @@ public class ReplyAnalyzer implements IPlainAnalyzer {
     private static final long REPLY_TIMEOUT = 500; // reply timeout in ms
 
     @Override
-    public void analyze(PacketInfo<? extends ArpPacket> packetInfo, AnalysisErrorResultHandler resultHandler) {
+    public AnalysisErrorResultHandler analyze(PacketInfo<? extends ArpPacket> packetInfo) {
+        AnalysisErrorResultHandler resultHandler = new AnalysisErrorResultHandler();
         // Check operation type. Interested in REPLY type.
         if (getArpOperation(packetInfo).equals(ArpOperation.REPLY)) {
             ConcurrentSkipListSet<PacketInfo<ArpPacket>> packets =
@@ -39,5 +40,6 @@ public class ReplyAnalyzer implements IPlainAnalyzer {
                 }
             }
         }
+        return resultHandler;
     }
 }

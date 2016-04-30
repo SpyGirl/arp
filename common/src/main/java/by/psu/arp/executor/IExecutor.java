@@ -6,10 +6,10 @@ package by.psu.arp.executor;
  * Date: Mar 27, 2016
  * </p>
  */
-public interface Executor extends Runnable {
+public interface IExecutor extends Runnable {
 
     /**
-     * Stops execution.
+     * Stops executor.
      */
     void stop();
 }

@@ -1,4 +1,4 @@
-package by.psu.arp.model.analysis;
+package by.psu.arp.analysis;
 
 /**
  * Analysis result type.

@@ -13,7 +13,7 @@ import org.slf4j.Logger;
  * Date: Mar 27, 2016
  * </p>
  */
-public class SenderExecutor implements Executor {
+public class SenderExecutor implements IExecutor {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String SEND_EXECUTION_ERROR = "Error occurred while sending ARP packets.";
@@ -38,15 +38,15 @@ public class SenderExecutor implements Executor {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
+            if (isStopped) {
+                break;
+            }
             try {
                 try {
                     Thread.sleep(timeOut);
                 } catch (InterruptedException e) {
                     LOGGER.error("Thread is interrupted.", e);
                     isStopped = true;
-                }
-                if (isStopped) {
-                    break;
                 }
                 packetSender.send(packetGenerator.get().generateRequestPacket());
                 packetSender.send(packetGenerator.get().generateReplayPacket());

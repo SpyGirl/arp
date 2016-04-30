@@ -1,6 +1,6 @@
-package by.psu.arp.packet.sensor.impl;
+package by.psu.arp.sniffer.impl;
 
-import by.psu.arp.packet.sensor.api.ISensor;
+import by.psu.arp.sniffer.api.ISensor;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
@@ -13,7 +13,7 @@ import static org.pcap4j.core.PcapNetworkInterface.PromiscuousMode.PROMISCUOUS;
  * Sensor factory.
  * Date: Mar 23, 2016
  */
-public final class SensorFactory {
+public abstract class SensorFactory {
 
     private static final int SNAPSHOT_LENGTH = 65536;
     private static final int READ_TIMEOUT = 20;

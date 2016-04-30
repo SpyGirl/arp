@@ -1,6 +1,7 @@
-package by.psu.arp.packet.sensor.impl;
+package by.psu.arp.sniffer.impl;
 
-import by.psu.arp.packet.listener.impl.ArpPacketListener;
+import by.psu.arp.listener.impl.ArpPacketListener;
+import by.psu.arp.sniffer.api.AbstractSensor;
 import org.pcap4j.core.PcapHandle;
 
 /**

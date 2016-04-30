@@ -1,7 +1,6 @@
-package by.psu.arp.packet.sensor.impl;
+package by.psu.arp.sniffer.api;
 
-import by.psu.arp.packet.listener.api.IPacketListener;
-import by.psu.arp.packet.sensor.api.ISensor;
+import by.psu.arp.listener.api.IPacketListener;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;

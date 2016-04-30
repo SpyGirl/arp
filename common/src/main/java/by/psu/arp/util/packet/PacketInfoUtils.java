@@ -1,6 +1,6 @@
 package by.psu.arp.util.packet;
 
-import by.psu.arp.model.packet.PacketInfo;
+import by.psu.arp.packet.PacketInfo;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.packet.namednumber.ArpOperation;
 import org.pcap4j.util.MacAddress;

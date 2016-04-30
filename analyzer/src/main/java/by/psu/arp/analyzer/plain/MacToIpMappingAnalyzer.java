@@ -1,15 +1,15 @@
 package by.psu.arp.analyzer.plain;
 
-import by.psu.arp.model.analysis.AnalysisErrorResultHandler;
-import by.psu.arp.model.analysis.AnalysisResult;
-import by.psu.arp.model.packet.PacketInfo;
+import by.psu.arp.analysis.AnalysisErrorResultHandler;
+import by.psu.arp.analysis.AnalysisResult;
+import by.psu.arp.packet.PacketInfo;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.util.MacAddress;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import static by.psu.arp.model.analysis.AnalysisResultType.MULTIPLE_IP_FOR_MAC;
+import static by.psu.arp.analysis.AnalysisResultType.MULTIPLE_IP_FOR_MAC;
 import static by.psu.arp.storage.PacketInfoStorage.getStorageInstance;
 import static by.psu.arp.util.packet.PacketInfoUtils.getSourceInetAddress;
 import static by.psu.arp.util.packet.PacketInfoUtils.getSourceMacAddress;
@@ -24,25 +24,27 @@ import static by.psu.arp.util.packet.PacketInfoUtils.getSourceMacAddress;
 public class MacToIpMappingAnalyzer implements IPlainAnalyzer {
 
     @Override
-    public void analyze(PacketInfo<? extends ArpPacket> packetInfo, AnalysisErrorResultHandler resultHandler) {
+    public AnalysisErrorResultHandler analyze(PacketInfo<? extends ArpPacket> packetInfo) {
         MacAddress sourceMacAddress = getSourceMacAddress(packetInfo);
         ConcurrentSkipListSet<PacketInfo<ArpPacket>> packetInfoList =
                 getStorageInstance().getRequests(sourceMacAddress);
-        innerAnalyze(packetInfo, packetInfoList, resultHandler);
+        AnalysisErrorResultHandler resultHandler = internalAnalyze(packetInfo, packetInfoList);
         packetInfoList = getStorageInstance().getReplays(sourceMacAddress);
-        innerAnalyze(packetInfo, packetInfoList, resultHandler);
+        resultHandler.addErrors(internalAnalyze(packetInfo, packetInfoList).getAnalysisResults());
         if (resultHandler.hasErrors()) {
             resultHandler.addError(new AnalysisResult(packetInfo, MULTIPLE_IP_FOR_MAC));
         }
+        return resultHandler;
     }
 
-    private void innerAnalyze(PacketInfo<? extends ArpPacket> packetInfo,
-                              Collection<PacketInfo<ArpPacket>> packetInfoList,
-                              AnalysisErrorResultHandler resultHandler) {
+    private AnalysisErrorResultHandler internalAnalyze(PacketInfo<? extends ArpPacket> packetInfo,
+                                                    Collection<PacketInfo<ArpPacket>> packetInfoList) {
+        AnalysisErrorResultHandler resultHandler = new AnalysisErrorResultHandler();
         packetInfoList.stream()
                 .filter(arpPacketInfo -> !getSourceInetAddress(packetInfo).equals(getSourceInetAddress(arpPacketInfo)))
                 .forEach(arpPacketInfo -> {
                     resultHandler.addError(new AnalysisResult(arpPacketInfo, MULTIPLE_IP_FOR_MAC));
                 });
+        return resultHandler;
     }
 }

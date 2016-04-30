@@ -1,7 +1,7 @@
 package by.psu.arp.analyzer.plain;
 
-import by.psu.arp.model.analysis.AnalysisErrorResultHandler;
-import by.psu.arp.model.packet.PacketInfo;
+import by.psu.arp.analysis.AnalysisErrorResultHandler;
+import by.psu.arp.packet.PacketInfo;
 import org.pcap4j.packet.ArpPacket;
 
 /**
@@ -16,7 +16,7 @@ public interface IPlainAnalyzer {
      * Analyses packet info & adds error (if they exist) to result handler.
      *
      * @param packetInfo    packet info to analyze
-     * @param resultHandler result handler
+     * @return result of analysis
      */
-    void analyze(PacketInfo<? extends ArpPacket> packetInfo, AnalysisErrorResultHandler resultHandler);
+    AnalysisErrorResultHandler analyze(PacketInfo<? extends ArpPacket> packetInfo);
 }

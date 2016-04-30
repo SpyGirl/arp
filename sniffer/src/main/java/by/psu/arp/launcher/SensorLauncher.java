@@ -1,9 +1,8 @@
 package by.psu.arp.launcher;
 
-import by.psu.arp.util.logging.ArpLogger;
 import by.psu.arp.executor.SensorExecutor;
-import by.psu.arp.packet.sensor.impl.SensorFactory;
-import org.apache.commons.lang3.math.NumberUtils;
+import by.psu.arp.sniffer.impl.SensorFactory;
+import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
@@ -19,7 +18,7 @@ import java.util.List;
  * Date: Mar 27, 2016
  * </p>
  */
-public class SensorLauncher implements ILauncher {
+public class SensorLauncher extends AbstractLauncher {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String FIND_ALL_DEVICES_ERROR = "Failed to get list of interfaces.";
@@ -27,9 +26,6 @@ public class SensorLauncher implements ILauncher {
             = "Unable to create packet sensor for [{}] network interface.";
     private static final String ATTEMPT_TO_STOP_EXECUTOR = "Attempt to stop executor.";
     private static final String THREAD_GROUP = "sensor-launcher";
-
-    private List<SensorExecutor> executors;
-    private ThreadGroup threadGroup;
 
     public SensorLauncher() {
         threadGroup = new ThreadGroup(THREAD_GROUP);
@@ -53,17 +49,10 @@ public class SensorLauncher implements ILauncher {
                 LOGGER.error(CREATE_SENSOR_FOR_NIF_ERROR, networkInterface);
                 continue;
             }
-            new Thread(threadGroup, sensorExecutor, THREAD_GROUP + "-" + networkInterface.getName()).start();
+            new Thread(threadGroup, sensorExecutor, THREAD_GROUP + "-" + networkInterface.getName())
+                    .start();
             executors.add(sensorExecutor);
         }
 
-    }
-
-    @Override
-    public void stop() {
-        if (executors.size() > NumberUtils.INTEGER_ZERO) {
-            LOGGER.info(ATTEMPT_TO_STOP_EXECUTOR);
-            executors.forEach(SensorExecutor::stop);
-        }
     }
 }

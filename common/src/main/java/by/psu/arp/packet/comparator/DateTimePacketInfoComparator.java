@@ -1,6 +1,6 @@
-package by.psu.arp.model.packet.comparator;
+package by.psu.arp.packet.comparator;
 
-import by.psu.arp.model.packet.PacketInfo;
+import by.psu.arp.packet.PacketInfo;
 import org.pcap4j.packet.Packet;
 
 import java.util.Comparator;

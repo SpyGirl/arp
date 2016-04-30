@@ -1,18 +1,19 @@
 package by.psu.arp.storage;
 
-import by.psu.arp.model.packet.PacketInfo;
-import by.psu.arp.model.packet.comparator.DateTimePacketInfoComparator;
+import by.psu.arp.packet.PacketInfo;
+import by.psu.arp.packet.comparator.DateTimePacketInfoComparator;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.util.MacAddress;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import static by.psu.arp.util.packet.PacketInfoUtils.getArpOperation;
-import static by.psu.arp.util.packet.PacketInfoUtils.getSourceInetAddress;
-import static by.psu.arp.util.packet.PacketInfoUtils.getSourceMacAddress;
+import static by.psu.arp.util.packet.PacketInfoUtils.*;
 import static org.pcap4j.packet.namednumber.ArpOperation.REQUEST;
 
 /**
@@ -143,6 +144,25 @@ public final class PacketInfoStorage<T extends PacketInfo<ArpPacket>> implements
      */
     public ConcurrentSkipListSet<T> removeReplays(MacAddress macAddress) {
         return macReplays.remove(macAddress);
+    }
+
+    public void cleanUptoTime(Date dateTime) {
+        cleanUptoDateTime(ipReplays.values(), dateTime);
+        cleanUptoDateTime(ipRequests.values(), dateTime);
+        cleanUptoDateTime(macReplays.values(), dateTime);
+        cleanUptoDateTime(macRequests.values(), dateTime);
+    }
+
+    private void cleanUptoDateTime(Collection<ConcurrentSkipListSet<T>> values, Date dateTime) {
+        for (ConcurrentSkipListSet<T> value : values) {
+            Iterator<T> iterator = value.iterator();
+            while (iterator.hasNext()) {
+                T packet = iterator.next();
+                if (packet.getDateTime().before(dateTime)) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     private void storeByIp(T packetInfo, ConcurrentHashMap<InetAddress, ConcurrentSkipListSet<T>> map) {

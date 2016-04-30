@@ -1,6 +1,6 @@
-package by.psu.arp.model.analysis;
+package by.psu.arp.analysis;
 
-import by.psu.arp.model.packet.PacketInfo;
+import by.psu.arp.packet.PacketInfo;
 import org.pcap4j.packet.ArpPacket;
 
 /**

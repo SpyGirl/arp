@@ -1,4 +1,4 @@
-package by.psu.arp.packet.sensor.exception;
+package by.psu.arp.exception;
 
 /**
  * Sensor not found exception.

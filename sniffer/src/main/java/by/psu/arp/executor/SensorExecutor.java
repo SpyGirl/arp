@@ -1,13 +1,14 @@
 package by.psu.arp.executor;
 
-import by.psu.arp.model.packet.PacketInfo;
-import by.psu.arp.storage.PacketInfoStorage;
+import by.psu.arp.packet.PacketInfo;
+import by.psu.arp.sniffer.api.ISensor;
 import by.psu.arp.util.logging.ArpLogger;
-import by.psu.arp.packet.sensor.api.ISensor;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.packet.ArpPacket;
 import org.slf4j.Logger;
+
+import static by.psu.arp.storage.PacketInfoStorage.getStorageInstance;
 
 /**
  * Sender executor.
@@ -15,13 +16,11 @@ import org.slf4j.Logger;
  * Date: Mar 27, 2016
  * </p>
  */
-public class SensorExecutor implements Executor {
+public class SensorExecutor implements IExecutor {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String STOP_EXECUTION_ERROR = "Error occurred while trying to stop catching packets.";
     private static final String CATCH_EXECUTION_ERROR = "Error occurred while catching packets.";
-
-    private final PacketInfoStorage storage = PacketInfoStorage.getStorageInstance();
 
     private ISensor sensor;
     private volatile boolean isStopped;
@@ -48,7 +47,7 @@ public class SensorExecutor implements Executor {
                     break;
                 }
                 ArpPacket arpPacket = sensor.catchNextPacket();
-                storage.put(new PacketInfo<>(arpPacket));
+                getStorageInstance().put(new PacketInfo<>(arpPacket));
                 LOGGER.info("Caught packet:\n{}", arpPacket);
             } catch (PcapNativeException | NotOpenException | InterruptedException e) {
                 LOGGER.error(CATCH_EXECUTION_ERROR, e);

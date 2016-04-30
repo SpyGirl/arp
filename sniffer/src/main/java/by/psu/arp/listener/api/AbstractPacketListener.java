@@ -1,6 +1,5 @@
-package by.psu.arp.packet.listener.impl;
+package by.psu.arp.listener.api;
 
-import by.psu.arp.packet.listener.api.IPacketListener;
 import org.pcap4j.packet.ArpPacket;
 
 /**

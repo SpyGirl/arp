@@ -1,4 +1,4 @@
-package by.psu.arp.model.analysis;
+package by.psu.arp.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class AnalysisErrorResultHandler {
 
-    private List<AnalysisResult> analysisResults = new ArrayList<AnalysisResult>();
+    private List<AnalysisResult> analysisResults = new ArrayList<>();
 
     /**
      * Adds error.
@@ -20,6 +20,10 @@ public class AnalysisErrorResultHandler {
      */
     public void addError(AnalysisResult analysisResult) {
         analysisResults.add(analysisResult);
+    }
+
+    public void addErrors(List<AnalysisResult> analysisResults) {
+        this.analysisResults.addAll(analysisResults);
     }
 
     public boolean hasErrors() {

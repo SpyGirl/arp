@@ -1,4 +1,4 @@
-package by.psu.arp.packet.sensor.api;
+package by.psu.arp.sniffer.api;
 
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;

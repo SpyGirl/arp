@@ -1,15 +1,15 @@
 package by.psu.arp.analyzer.plain;
 
-import by.psu.arp.model.analysis.AnalysisErrorResultHandler;
-import by.psu.arp.model.analysis.AnalysisResult;
-import by.psu.arp.model.packet.PacketInfo;
+import by.psu.arp.analysis.AnalysisErrorResultHandler;
+import by.psu.arp.analysis.AnalysisResult;
+import by.psu.arp.packet.PacketInfo;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.util.MacAddress;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import static by.psu.arp.model.analysis.AnalysisResultType.SPAM_FROM_MAC;
+import static by.psu.arp.analysis.AnalysisResultType.SPAM_FROM_MAC;
 import static by.psu.arp.storage.PacketInfoStorage.getStorageInstance;
 import static by.psu.arp.util.packet.PacketInfoUtils.getSourceMacAddress;
 
@@ -25,7 +25,8 @@ public class SpamAnalyzer implements IPlainAnalyzer {
     private static final long ACCEPTABLE_NUMBER_OF_PACKETS = 10;
 
     @Override
-    public void analyze(PacketInfo<? extends ArpPacket> packetInfo, AnalysisErrorResultHandler resultHandler) {
+    public AnalysisErrorResultHandler analyze(PacketInfo<? extends ArpPacket> packetInfo) {
+        AnalysisErrorResultHandler resultHandler = new AnalysisErrorResultHandler();
         long lowerTimeBounds = System.currentTimeMillis() - PACKET_TRANSFER_TIME_BOUNDS;
         MacAddress sourceMacAddress = getSourceMacAddress(packetInfo);
         ConcurrentSkipListSet<PacketInfo<ArpPacket>> packets = getStorageInstance().getRequests(sourceMacAddress);
@@ -35,6 +36,7 @@ public class SpamAnalyzer implements IPlainAnalyzer {
         if (packetsCount > ACCEPTABLE_NUMBER_OF_PACKETS) {
             resultHandler.addError(new AnalysisResult(packetInfo, SPAM_FROM_MAC));
         }
+        return resultHandler;
     }
 
     private long countPackets(PacketInfo<? extends ArpPacket> packetInfo, Collection<PacketInfo<ArpPacket>> packets,

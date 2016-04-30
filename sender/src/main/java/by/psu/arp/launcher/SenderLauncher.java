@@ -1,9 +1,8 @@
 package by.psu.arp.launcher;
 
-import by.psu.arp.util.logging.ArpLogger;
 import by.psu.arp.executor.SenderExecutor;
 import by.psu.arp.packet.sender.impl.PacketSenderFactory;
-import org.apache.commons.lang3.math.NumberUtils;
+import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.Pcaps;
@@ -18,7 +17,7 @@ import java.util.List;
  * Date: Mar 27, 2016
  * </p>
  */
-public class SenderLauncher implements ILauncher {
+public class SenderLauncher extends AbstractLauncher {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String FIND_ALL_DEVICES_ERROR = "Failed to get list of interfaces.";
@@ -27,16 +26,13 @@ public class SenderLauncher implements ILauncher {
     private static final String ATTEMPT_TO_STOP_EXECUTOR = "Attempt to stop executor.";
     private static final String THREAD_GROUP = "sender-launcher";
 
-    private List<SenderExecutor> executors;
-    private ThreadGroup threadGroup;
-
     public SenderLauncher() {
         threadGroup = new ThreadGroup(THREAD_GROUP);
     }
 
     @Override
     public void launch() {
-        List<PcapNetworkInterface> interfaces = null;
+        List<PcapNetworkInterface> interfaces;
         try {
             interfaces = Pcaps.findAllDevs();
         } catch (PcapNativeException e) {
@@ -56,13 +52,5 @@ public class SenderLauncher implements ILauncher {
             executors.add(senderExecutor);
         }
 
-    }
-
-    @Override
-    public void stop() {
-        if (executors.size() > NumberUtils.INTEGER_ZERO) {
-            LOGGER.info(ATTEMPT_TO_STOP_EXECUTOR);
-            executors.forEach(SenderExecutor::stop);
-        }
     }
 }
