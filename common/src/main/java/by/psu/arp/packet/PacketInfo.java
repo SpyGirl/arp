@@ -21,7 +21,7 @@ public class PacketInfo<T extends ArpPacket> implements Serializable {
 
     public PacketInfo(T packet) {
         this.packet = packet;
-        this.dateTime = new Date(System.nanoTime());
+        this.dateTime = new Date();
     }
 
     public T getPacket() {

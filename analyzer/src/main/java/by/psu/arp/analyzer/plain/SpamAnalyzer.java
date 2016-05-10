@@ -22,7 +22,7 @@ import static by.psu.arp.util.packet.PacketInfoUtils.getSourceMacAddress;
 public class SpamAnalyzer implements IPlainAnalyzer {
 
     private static final long PACKET_TRANSFER_TIME_BOUNDS = 1000; // time in ms
-    private static final long ACCEPTABLE_NUMBER_OF_PACKETS = 10;
+    private static final long ACCEPTABLE_NUMBER_OF_PACKETS = 50;
 
     @Override
     public AnalysisErrorResultHandler analyze(PacketInfo<? extends ArpPacket> packetInfo) {
@@ -41,6 +41,9 @@ public class SpamAnalyzer implements IPlainAnalyzer {
 
     private long countPackets(PacketInfo<? extends ArpPacket> packetInfo, Collection<PacketInfo<ArpPacket>> packets,
                               long lowerTimeBounds) {
+        if (packets == null) {
+            return 0;
+        }
         return packets.stream()
                 .filter(arpPacketInfo ->
                         getSourceMacAddress(packetInfo).equals(getSourceMacAddress(arpPacketInfo)) &&

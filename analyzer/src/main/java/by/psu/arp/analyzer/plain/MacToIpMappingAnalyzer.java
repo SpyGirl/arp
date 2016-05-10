@@ -38,13 +38,15 @@ public class MacToIpMappingAnalyzer implements IPlainAnalyzer {
     }
 
     private AnalysisErrorResultHandler internalAnalyze(PacketInfo<? extends ArpPacket> packetInfo,
-                                                    Collection<PacketInfo<ArpPacket>> packetInfoList) {
+                                                       Collection<PacketInfo<ArpPacket>> packetInfoList) {
         AnalysisErrorResultHandler resultHandler = new AnalysisErrorResultHandler();
+        if (packetInfoList == null) {
+            return resultHandler;
+        }
         packetInfoList.stream()
                 .filter(arpPacketInfo -> !getSourceInetAddress(packetInfo).equals(getSourceInetAddress(arpPacketInfo)))
-                .forEach(arpPacketInfo -> {
-                    resultHandler.addError(new AnalysisResult(arpPacketInfo, MULTIPLE_IP_FOR_MAC));
-                });
+                .forEach(arpPacketInfo ->
+                        resultHandler.addError(new AnalysisResult(arpPacketInfo, MULTIPLE_IP_FOR_MAC)));
         return resultHandler;
     }
 }

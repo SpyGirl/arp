@@ -8,7 +8,7 @@ import org.pcap4j.packet.ArpPacket;
  * Date: Mar 22, 2016
  * </p>
  */
-public abstract class AbstractPacketListener implements IPacketListener {
+public abstract class AbstractPacketSniffer implements IPacketSniffer {
 
     /**
      * Caught packet.

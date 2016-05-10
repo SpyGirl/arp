@@ -1,7 +1,8 @@
 package by.psu.arp.launcher;
 
-import by.psu.arp.executor.SensorExecutor;
-import by.psu.arp.sniffer.impl.SensorFactory;
+import by.psu.arp.executor.SnifferExecutor;
+import by.psu.arp.launcher.api.AbstractLauncher;
+import by.psu.arp.sniffer.impl.SnifferFactory;
 import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
@@ -18,7 +19,7 @@ import java.util.List;
  * Date: Mar 27, 2016
  * </p>
  */
-public class SensorLauncher extends AbstractLauncher {
+public class SnifferLauncher extends AbstractLauncher {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String FIND_ALL_DEVICES_ERROR = "Failed to get list of interfaces.";
@@ -27,7 +28,7 @@ public class SensorLauncher extends AbstractLauncher {
     private static final String ATTEMPT_TO_STOP_EXECUTOR = "Attempt to stop executor.";
     private static final String THREAD_GROUP = "sensor-launcher";
 
-    public SensorLauncher() {
+    public SnifferLauncher() {
         threadGroup = new ThreadGroup(THREAD_GROUP);
     }
 
@@ -42,16 +43,16 @@ public class SensorLauncher extends AbstractLauncher {
         }
         executors = new ArrayList<>(interfaces.size());
         for (PcapNetworkInterface networkInterface : interfaces) {
-            SensorExecutor sensorExecutor;
+            SnifferExecutor snifferExecutor;
             try {
-                sensorExecutor = new SensorExecutor(SensorFactory.create(networkInterface));
+                snifferExecutor = new SnifferExecutor(SnifferFactory.create(networkInterface));
             } catch (PcapNativeException | NotOpenException e) {
                 LOGGER.error(CREATE_SENSOR_FOR_NIF_ERROR, networkInterface);
                 continue;
             }
-            new Thread(threadGroup, sensorExecutor, THREAD_GROUP + "-" + networkInterface.getName())
+            new Thread(threadGroup, snifferExecutor, THREAD_GROUP + "-" + networkInterface.getName())
                     .start();
-            executors.add(sensorExecutor);
+            executors.add(snifferExecutor);
         }
 
     }

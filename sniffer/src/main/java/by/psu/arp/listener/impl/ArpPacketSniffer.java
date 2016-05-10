@@ -1,6 +1,6 @@
 package by.psu.arp.listener.impl;
 
-import by.psu.arp.listener.api.AbstractPacketListener;
+import by.psu.arp.listener.api.AbstractPacketSniffer;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.packet.Packet;
 
@@ -10,7 +10,7 @@ import org.pcap4j.packet.Packet;
  * Date: Mar 22, 2016
  * </p>
  */
-public class ArpPacketListener extends AbstractPacketListener {
+public class ArpPacketSniffer extends AbstractPacketSniffer {
 
     private static final Class<ArpPacket> ARP_PACKET_CLASS = ArpPacket.class;
 

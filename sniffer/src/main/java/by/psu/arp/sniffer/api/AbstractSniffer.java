@@ -1,6 +1,6 @@
 package by.psu.arp.sniffer.api;
 
-import by.psu.arp.listener.api.IPacketListener;
+import by.psu.arp.listener.api.IPacketSniffer;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
@@ -12,12 +12,12 @@ import org.pcap4j.packet.ArpPacket;
  * Date: Mar 22, 2016
  * </p>
  */
-public abstract class AbstractSensor implements ISensor {
+public abstract class AbstractSniffer implements ISniffer {
 
     private final static int LOOP_ONCE = 1;
 
     private final PcapHandle handle;
-    private final IPacketListener packetListener;
+    private final IPacketSniffer packetListener;
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ public abstract class AbstractSensor implements ISensor {
      * @param handle pcap handle
      * @param packetListener packet listener
      */
-    public AbstractSensor(PcapHandle handle, IPacketListener packetListener) {
+    public AbstractSniffer(PcapHandle handle, IPacketSniffer packetListener) {
         this.handle = handle;
         this.packetListener = packetListener;
     }

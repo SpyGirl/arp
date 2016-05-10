@@ -1,6 +1,6 @@
 package by.psu.arp.sniffer.impl;
 
-import by.psu.arp.sniffer.api.ISensor;
+import by.psu.arp.sniffer.api.ISniffer;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
@@ -13,7 +13,7 @@ import static org.pcap4j.core.PcapNetworkInterface.PromiscuousMode.PROMISCUOUS;
  * Sensor factory.
  * Date: Mar 23, 2016
  */
-public abstract class SensorFactory {
+public abstract class SnifferFactory {
 
     private static final int SNAPSHOT_LENGTH = 65536;
     private static final int READ_TIMEOUT = 20;
@@ -21,7 +21,7 @@ public abstract class SensorFactory {
     /**
      * Constructor.
      */
-    private SensorFactory() {
+    private SnifferFactory() {
         throw new UnsupportedOperationException("This object must never be created.");
     }
 
@@ -33,10 +33,10 @@ public abstract class SensorFactory {
      * @throws PcapNativeException
      * @throws NotOpenException
      */
-    public static ISensor create(PcapNetworkInterface networkInterface)
+    public static ISniffer create(PcapNetworkInterface networkInterface)
             throws PcapNativeException, NotOpenException {
         PcapHandle handle = networkInterface.openLive(SNAPSHOT_LENGTH, PROMISCUOUS, READ_TIMEOUT);
         handle.setFilter("arp", OPTIMIZE);
-        return new ArpSensor(handle);
+        return new ArpSniffer(handle);
     }
 }

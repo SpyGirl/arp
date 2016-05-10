@@ -10,7 +10,7 @@ import org.pcap4j.packet.ArpPacket;
  * Date: Mar 20, 2016
  * </p>
  */
-public interface ISensor {
+public interface ISniffer {
 
     /**
      * Catches next packet and returns it. Waits until catch a packet.

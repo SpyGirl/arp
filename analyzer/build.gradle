@@ -10,4 +10,6 @@ repositories {
 dependencies {
     compile project(":common")
     compile project(":storage")
+
+    compile("junit:junit:${junitVersion}")
 }

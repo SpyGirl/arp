@@ -9,7 +9,7 @@ import org.pcap4j.packet.ArpPacket;
  * Date: Mar 22, 2016
  * </p>
  */
-public interface IPacketListener extends PacketListener {
+public interface IPacketSniffer extends PacketListener {
 
     /**
      * Gets caught packet.

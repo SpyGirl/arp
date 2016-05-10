@@ -39,6 +39,9 @@ public class IpToMacMappingAnalyzer implements IPlainAnalyzer {
     private AnalysisErrorResultHandler internalAnalyze(PacketInfo<? extends ArpPacket> packetInfo,
                                                        Collection<PacketInfo<ArpPacket>> packetInfoList) {
         AnalysisErrorResultHandler resultHandler = new AnalysisErrorResultHandler();
+        if (packetInfoList == null) {
+            return resultHandler;
+        }
         packetInfoList.stream()
                 .filter(arpPacketInfo -> !getSourceMacAddress(packetInfo).equals(getSourceMacAddress(arpPacketInfo)))
                 .forEach(arpPacketInfo ->

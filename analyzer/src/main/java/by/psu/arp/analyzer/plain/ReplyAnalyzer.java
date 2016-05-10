@@ -21,7 +21,7 @@ import static by.psu.arp.util.packet.PacketInfoUtils.*;
  */
 public class ReplyAnalyzer implements IPlainAnalyzer {
 
-    private static final long REPLY_TIMEOUT = 500; // reply timeout in ms
+    private static final long REPLY_TIMEOUT = 2000; // reply timeout in ms
 
     @Override
     public AnalysisErrorResultHandler analyze(PacketInfo<? extends ArpPacket> packetInfo) {
@@ -29,13 +29,13 @@ public class ReplyAnalyzer implements IPlainAnalyzer {
         // Check operation type. Interested in REPLY type.
         if (getArpOperation(packetInfo).equals(ArpOperation.REPLY)) {
             ConcurrentSkipListSet<PacketInfo<ArpPacket>> packets =
-                    getStorageInstance().getRequests(getSourceInetAddress(packetInfo));
+                    getStorageInstance().getRequests(getDestinationInetAddress(packetInfo));
             if (packets == null) { // There were no requests for this IP address.
                 resultHandler.addError(new AnalysisResult(packetInfo, REPLAY_WITHOUT_REQUEST));
             } else {
                 // Check timeout.
-                long timeDiff = getTimeInMiliseconds(packets.first()) - getTimeInMiliseconds(packetInfo);
-                if (REPLY_TIMEOUT >= timeDiff) { // reply timeout expired
+                long timeDiff = getTimeInMiliseconds(packetInfo) - getTimeInMiliseconds(packets.first());
+                if (REPLY_TIMEOUT <= timeDiff) { // reply timeout expired
                     resultHandler.addError(new AnalysisResult(packetInfo, REPLAY_TIMEOUT_EXPIRE));
                 }
             }

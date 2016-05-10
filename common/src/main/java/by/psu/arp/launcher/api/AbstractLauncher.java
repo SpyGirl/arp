@@ -1,4 +1,4 @@
-package by.psu.arp.launcher;
+package by.psu.arp.launcher.api;
 
 import by.psu.arp.executor.IExecutor;
 

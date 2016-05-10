@@ -32,9 +32,8 @@ public abstract class AnalyzerContainer {
             new SpamAnalyzer()
     );
 
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(4);
-
     public static AnalysisErrorResultHandler analyze(PacketInfo<ArpPacket> packetInfo) {
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
         List<FutureTask<AnalysisErrorResultHandler>> tasks = new ArrayList<>(ANALYZERS_COUNT);
         analyzers.stream().forEach(analyzer -> {
             FutureTask<AnalysisErrorResultHandler> task = new FutureTask<>(new CallableAnalyzer(analyzer, packetInfo));
@@ -64,7 +63,7 @@ public abstract class AnalyzerContainer {
         private IPlainAnalyzer analyzer;
         private PacketInfo<ArpPacket> packetInfo;
 
-        public CallableAnalyzer(IPlainAnalyzer analyzer, PacketInfo<ArpPacket> packetInfo) {
+        CallableAnalyzer(IPlainAnalyzer analyzer, PacketInfo<ArpPacket> packetInfo) {
             this.analyzer = analyzer;
             this.packetInfo = packetInfo;
         }

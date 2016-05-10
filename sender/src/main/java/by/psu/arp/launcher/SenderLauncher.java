@@ -1,6 +1,7 @@
 package by.psu.arp.launcher;
 
 import by.psu.arp.executor.SenderExecutor;
+import by.psu.arp.launcher.api.AbstractLauncher;
 import by.psu.arp.packet.sender.impl.PacketSenderFactory;
 import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.core.PcapNativeException;

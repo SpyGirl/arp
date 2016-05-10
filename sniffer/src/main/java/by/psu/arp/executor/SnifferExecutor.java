@@ -1,7 +1,7 @@
 package by.psu.arp.executor;
 
 import by.psu.arp.packet.PacketInfo;
-import by.psu.arp.sniffer.api.ISensor;
+import by.psu.arp.sniffer.api.ISniffer;
 import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
@@ -16,16 +16,16 @@ import static by.psu.arp.storage.PacketInfoStorage.getStorageInstance;
  * Date: Mar 27, 2016
  * </p>
  */
-public class SensorExecutor implements IExecutor {
+public class SnifferExecutor implements IExecutor {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String STOP_EXECUTION_ERROR = "Error occurred while trying to stop catching packets.";
     private static final String CATCH_EXECUTION_ERROR = "Error occurred while catching packets.";
 
-    private ISensor sensor;
+    private ISniffer sensor;
     private volatile boolean isStopped;
 
-    public SensorExecutor(ISensor sensor) {
+    public SnifferExecutor(ISniffer sensor) {
         this.sensor = sensor;
     }
 

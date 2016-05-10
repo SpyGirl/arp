@@ -87,7 +87,7 @@ public final class ArpPacketGenerator {
         }
     }
 
-    private Packet build(MacAddress srcMacAddress, MacAddress dstMacAddress) {
+    private EthernetPacket build(MacAddress srcMacAddress, MacAddress dstMacAddress) {
         return new EthernetPacket.Builder()
                 .srcAddr(srcMacAddress)
                 .dstAddr(dstMacAddress)
