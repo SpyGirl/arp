@@ -1,5 +1,6 @@
-package by.psu.arp.executor;
+package by.psu.arp.executor.impl;
 
+import by.psu.arp.executor.IExecutor;
 import by.psu.arp.packet.PacketInfo;
 import by.psu.arp.sniffer.api.ISniffer;
 import by.psu.arp.util.logging.ArpLogger;
@@ -31,6 +32,7 @@ public class SnifferExecutor implements IExecutor {
 
     @Override
     public void stop() {
+        LOGGER.info("Stop signal for sniffer executor.");
         isStopped = true;
         try {
             sensor.stop();
@@ -41,6 +43,7 @@ public class SnifferExecutor implements IExecutor {
 
     @Override
     public void run() {
+        LOGGER.info("Sniffer executor has been started.");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 if (isStopped) {
@@ -54,5 +57,6 @@ public class SnifferExecutor implements IExecutor {
                 break;
             }
         }
+        LOGGER.info("Sniffer executor has been stopped.");
     }
 }

@@ -1,7 +1,8 @@
 package by.psu.arp.launcher;
 
+import by.psu.arp.executor.IExecutor;
 import by.psu.arp.executor.SenderExecutor;
-import by.psu.arp.launcher.api.AbstractLauncher;
+import by.psu.arp.launcher.api.ILauncher;
 import by.psu.arp.packet.sender.impl.PacketSenderFactory;
 import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.core.PcapNativeException;
@@ -18,7 +19,7 @@ import java.util.List;
  * Date: Mar 27, 2016
  * </p>
  */
-public class SenderLauncher extends AbstractLauncher {
+public class SenderLauncher implements ILauncher {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String FIND_ALL_DEVICES_ERROR = "Failed to get list of interfaces.";
@@ -26,6 +27,9 @@ public class SenderLauncher extends AbstractLauncher {
             = "Unable to create packet sender for [{}] network interface.";
     private static final String ATTEMPT_TO_STOP_EXECUTOR = "Attempt to stop executor.";
     private static final String THREAD_GROUP = "sender-launcher";
+
+    private ThreadGroup threadGroup;
+    private List<IExecutor> executors;
 
     public SenderLauncher() {
         threadGroup = new ThreadGroup(THREAD_GROUP);
@@ -52,6 +56,10 @@ public class SenderLauncher extends AbstractLauncher {
             new Thread(threadGroup, senderExecutor, THREAD_GROUP + "-" + networkInterface.getName()).start();
             executors.add(senderExecutor);
         }
+    }
 
+    @Override
+    public void stop() {
+        executors.forEach(IExecutor::stop);
     }
 }

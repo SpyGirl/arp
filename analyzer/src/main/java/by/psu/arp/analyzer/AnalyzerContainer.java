@@ -33,6 +33,7 @@ public abstract class AnalyzerContainer {
     );
 
     public static AnalysisErrorResultHandler analyze(PacketInfo<ArpPacket> packetInfo) {
+        LOGGER.info("Packet to analyze: {}", packetInfo);
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         List<FutureTask<AnalysisErrorResultHandler>> tasks = new ArrayList<>(ANALYZERS_COUNT);
         analyzers.stream().forEach(analyzer -> {
@@ -55,6 +56,7 @@ public abstract class AnalyzerContainer {
                 }
             }
         }
+        executorService.shutdown();
         return resultHandler;
     }
 

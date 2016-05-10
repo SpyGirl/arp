@@ -19,14 +19,3 @@ dependencies {
 
     compile ("org.apache.commons:commons-lang3:${commonsLangVersion}")
 }
-
-task jarAll(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': project.name,
-                'Implementation-Version': project.version,
-                'Main-Class': mainClassName
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}

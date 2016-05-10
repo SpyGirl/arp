@@ -9,7 +9,7 @@ import java.util.List;
  * Date: Apr 07, 2016
  * </p>
  */
-public class AnalysisErrorResultHandler {
+public class AnalysisErrorResultHandler implements Comparable<AnalysisErrorResultHandler> {
 
     private List<AnalysisResult> analysisResults = new ArrayList<>();
 
@@ -32,5 +32,10 @@ public class AnalysisErrorResultHandler {
 
     public List<AnalysisResult> getAnalysisResults() {
         return analysisResults;
+    }
+
+    @Override
+    public int compareTo(AnalysisErrorResultHandler that) {
+        return analysisResults.size() - that.analysisResults.size();
     }
 }

@@ -6,4 +6,18 @@ repositories {
 }
 
 dependencies {
+    compile project (":common")
+    compile project (":sniffer")
+    compile project (":analyzer")
+}
+
+task jarAll(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'by.psu.arp.Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }

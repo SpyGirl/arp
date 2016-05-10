@@ -1,10 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
-version '1.0'
-
-def mainClassName = "by.psu.arp.SenderMain"
-
 repositories {
     mavenCentral()
 }
@@ -23,7 +19,7 @@ task jarAll(type: Jar) {
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version,
-                'Main-Class': mainClassName
+                'Main-Class': 'by.psu.arp.SenderMain'
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
