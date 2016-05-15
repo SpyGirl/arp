@@ -3,16 +3,17 @@ package by.psu.arp.analyzer.plain;
 import by.psu.arp.analysis.AnalysisErrorResultHandler;
 import by.psu.arp.analysis.AnalysisResult;
 import by.psu.arp.packet.PacketInfo;
+import by.psu.arp.settings.SettingsHolder;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.util.MacAddress;
 
-import java.util.Collection;
+import java.net.InetAddress;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import static by.psu.arp.analysis.AnalysisResultType.MULTIPLE_IP_FOR_MAC;
 import static by.psu.arp.storage.PacketInfoStorage.getStorageInstance;
-import static by.psu.arp.util.packet.PacketInfoUtils.getSourceInetAddress;
-import static by.psu.arp.util.packet.PacketInfoUtils.getSourceMacAddress;
+import static by.psu.arp.util.packet.PacketInfoUtils.*;
 
 /**
  * Mac to ip address mapping analyzer.
@@ -23,8 +24,23 @@ import static by.psu.arp.util.packet.PacketInfoUtils.getSourceMacAddress;
  */
 public class MacToIpMappingAnalyzer implements IPlainAnalyzer {
 
+    private static final Set<String> EXCLUDE_HOSTS;
+
+    static {
+        String hosts = "";
+        try {
+            hosts = SettingsHolder.getProperty("analyzer.excludeHosts");
+        } catch (Exception ignored) {
+        }
+        EXCLUDE_HOSTS = new TreeSet<>(Arrays.asList(hosts.split(";")));
+    }
+
     @Override
     public AnalysisErrorResultHandler analyze(PacketInfo<? extends ArpPacket> packetInfo) {
+        InetAddress destAddress = getDestinationInetAddress(packetInfo);
+        if (EXCLUDE_HOSTS.contains(destAddress.getHostAddress())) {
+            return new AnalysisErrorResultHandler();
+        }
         MacAddress sourceMacAddress = getSourceMacAddress(packetInfo);
         ConcurrentSkipListSet<PacketInfo<ArpPacket>> packetInfoList =
                 getStorageInstance().getRequests(sourceMacAddress);

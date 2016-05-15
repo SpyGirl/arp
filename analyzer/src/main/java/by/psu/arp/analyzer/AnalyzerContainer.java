@@ -1,7 +1,7 @@
 package by.psu.arp.analyzer;
 
-import by.psu.arp.analyzer.plain.*;
 import by.psu.arp.analysis.AnalysisErrorResultHandler;
+import by.psu.arp.analyzer.plain.*;
 import by.psu.arp.packet.PacketInfo;
 import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.packet.ArpPacket;

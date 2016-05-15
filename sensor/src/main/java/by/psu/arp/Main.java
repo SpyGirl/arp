@@ -1,6 +1,8 @@
 package by.psu.arp;
 
+import by.psu.arp.launcher.api.ILauncher;
 import by.psu.arp.launcher.impl.SensorLauncher;
+import by.psu.arp.settings.SettingsHolder;
 import by.psu.arp.util.logging.ArpLogger;
 import org.slf4j.Logger;
 
@@ -13,9 +15,11 @@ public class Main {
 
     private static final Logger LOGGER = ArpLogger.getLogger();
     private static final String STOP_COMMAND = "stop";
+    private static final String RESOURCE_PROPS = "sensor.properties";
 
     public static void main(String[] args) {
-        SensorLauncher sensorLauncher = new SensorLauncher();
+        SettingsHolder.loadSettings(RESOURCE_PROPS);
+        ILauncher sensorLauncher = new SensorLauncher();
         sensorLauncher.launch();
 
         Scanner cin = new Scanner(System.in);

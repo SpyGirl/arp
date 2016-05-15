@@ -23,11 +23,11 @@ public class SnifferExecutor implements IExecutor {
     private static final String STOP_EXECUTION_ERROR = "Error occurred while trying to stop catching packets.";
     private static final String CATCH_EXECUTION_ERROR = "Error occurred while catching packets.";
 
-    private ISniffer sensor;
+    private ISniffer sniffer;
     private volatile boolean isStopped;
 
-    public SnifferExecutor(ISniffer sensor) {
-        this.sensor = sensor;
+    public SnifferExecutor(ISniffer sniffer) {
+        this.sniffer = sniffer;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SnifferExecutor implements IExecutor {
         LOGGER.info("Stop signal for sniffer executor.");
         isStopped = true;
         try {
-            sensor.stop();
+            sniffer.stop();
         } catch (NotOpenException e) {
             LOGGER.error(STOP_EXECUTION_ERROR, e);
         }
@@ -49,7 +49,7 @@ public class SnifferExecutor implements IExecutor {
                 if (isStopped) {
                     break;
                 }
-                ArpPacket arpPacket = sensor.catchNextPacket();
+                ArpPacket arpPacket = sniffer.catchNextPacket();
                 getStorageInstance().put(new PacketInfo<>(arpPacket));
                 LOGGER.info("Caught packet:\n{}", arpPacket);
             } catch (PcapNativeException | NotOpenException | InterruptedException e) {

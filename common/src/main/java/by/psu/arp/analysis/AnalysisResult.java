@@ -3,7 +3,12 @@ package by.psu.arp.analysis;
 import by.psu.arp.packet.PacketInfo;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.pcap4j.packet.ArpPacket;
+
+import java.io.Serializable;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /**
  * Analysis result.
@@ -11,7 +16,7 @@ import org.pcap4j.packet.ArpPacket;
  * Date: Apr 07, 2016
  * </p>
  */
-public class AnalysisResult {
+public class AnalysisResult implements Serializable {
 
     private PacketInfo<? extends ArpPacket> packetInfo;
     private AnalysisResultType resultType;
@@ -55,5 +60,13 @@ public class AnalysisResult {
                 .append(packetInfo)
                 .append(resultType)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
+                .append("packetInfo", packetInfo)
+                .append("resultType", resultType)
+                .toString();
     }
 }

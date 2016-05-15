@@ -39,6 +39,7 @@ public final class PacketInfoStorage<T extends PacketInfo<ArpPacket>> implements
     private ConcurrentHashMap<MacAddress, ConcurrentSkipListSet<T>> macRequests;
     private ConcurrentHashMap<MacAddress, ConcurrentSkipListSet<T>> macReplays;
 
+    private ExecutorService executorService;
 
     private PacketInfoStorage() {
         packetsToAnalyze = new ConcurrentSkipListSet<>(DATE_TIME_PACKET_INFO_COMPARATOR);
@@ -177,11 +178,12 @@ public final class PacketInfoStorage<T extends PacketInfo<ArpPacket>> implements
                 }
             }
         }
+        executorService.shutdown();
         return cleanedItems;
     }
 
     private List<FutureTask<Integer>> runCleanUpTasks(Date dateTime) {
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        executorService = Executors.newFixedThreadPool(COLLECTIONS_COUNT);
         List<FutureTask<Integer>> tasks = new ArrayList<>(COLLECTIONS_COUNT);
         FutureTask<Integer> task = new FutureTask<>(new CallableStorageCleaner<>(ipReplays.values(), dateTime));
         tasks.add(task);

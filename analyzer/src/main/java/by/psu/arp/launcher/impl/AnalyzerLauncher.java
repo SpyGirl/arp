@@ -5,6 +5,8 @@ import by.psu.arp.executor.api.IAnalyzerExecutor;
 import by.psu.arp.executor.impl.AnalyzerExecutor;
 import by.psu.arp.launcher.api.IAnalyzerLauncher;
 
+import java.util.Collection;
+
 /**
  * Analyzer executor launcher.
  * <p>
@@ -24,8 +26,8 @@ public class AnalyzerLauncher implements IAnalyzerLauncher {
     }
 
     @Override
-    public AnalysisErrorResultHandler getResult() {
-        return executor.getResult();
+    public Collection<AnalysisErrorResultHandler> getResults() {
+        return executor.getResults();
     }
 
     @Override

@@ -26,7 +26,6 @@ public class SnifferLauncher implements ILauncher {
     private static final String FIND_ALL_DEVICES_ERROR = "Failed to get list of interfaces.";
     private static final String CREATE_SENSOR_FOR_NIF_ERROR
             = "Unable to create packet sensor for [{}] network interface.";
-    private static final String ATTEMPT_TO_STOP_EXECUTOR = "Attempt to stop executor.";
     private static final String THREAD_GROUP = "sensor-launcher";
 
     private ThreadGroup threadGroup;

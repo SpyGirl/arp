@@ -8,6 +8,8 @@ import by.psu.arp.util.logging.ArpLogger;
 import org.pcap4j.packet.ArpPacket;
 import org.slf4j.Logger;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,8 +31,8 @@ public class AnalyzerExecutor implements IAnalyzerExecutor {
     private volatile boolean isStopped;
 
     @Override
-    public AnalysisErrorResultHandler getResult() {
-        return results.pollFirst();
+    public Collection<AnalysisErrorResultHandler> getResults() {
+        return Collections.unmodifiableSet(results);
     }
 
     @Override
@@ -49,10 +51,12 @@ public class AnalyzerExecutor implements IAnalyzerExecutor {
             }
             PacketInfo<ArpPacket> packetInfo = getStorageInstance().pollPacket();
             if (packetInfo != null) {
-               EXECUTOR_SERVICE.execute(() -> {
+                EXECUTOR_SERVICE.execute(() -> {
                     AnalysisErrorResultHandler resultHandler = AnalyzerContainer.analyze(packetInfo);
-                    results.add(resultHandler);
-               });
+                    if (resultHandler.hasErrors()) {
+                        results.add(resultHandler);
+                    }
+                });
             }
         }
         LOGGER.info("Analyzer executor has been stopped.");
